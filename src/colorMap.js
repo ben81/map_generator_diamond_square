@@ -40,14 +40,18 @@ class ColorMap {
             15:{"color":"#575353","name":"very light grey rock","count":0},// very light grey rock
             16:{"color":"#000000","name":"snow","count":0}                // snow*/
         }
+		for (let i=1;i<=16; i++){
+			this.data[i].id=i;	
+		}
+		
+		
     }
 
     getHeightColor(height) {
-
-        //we increase the counter for future stats ;)
+		
         this.data[height].count ++;
 
-        return this.data[height].color;
+        return this.data[ height].color;
     }
 
     setLegend(sizeGrid) {
@@ -62,9 +66,9 @@ class ColorMap {
 
         tmp_array.forEach(el => {
 
-            let perc = Math.round(el.count/sizeGrid*100);
+            let perc = Math.round(el.count/sizeGrid*10000) /100;
 
-            if (perc > 0) {
+            if (el.count > 0) {
                 html += "<div class='line-legend'>\n";
                 html += "<div style='background:" + el.color + ";' class='legend-color'></div>";
                 html += "<div class='legend-name'>" + el.name.charAt(0).toUpperCase() + el.name.slice(1) + "</div>";

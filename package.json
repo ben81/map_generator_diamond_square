@@ -1,0 +1,22 @@
+{
+  "name": "map_generator_diamond_square",
+  "version": "0.1.0",
+  "description": "map generator",
+  "main": "main.js",
+  "scripts": {
+    "copy-src": "cp src/* dist/",
+    "copy-random": "cp node_modules/random/dist/* dist/",
+    "copy-p5": "cp node_modules/p5/lib/p5.min.js dist/",
+    "build": "mkdir -p dist && npm run copy-src  && npm run copy-random && npm run copy-p5",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "p5": "^1.11.2",
+    "random": "^5.1.1",
+    "server": "^1.0.41"
+  }
+ 
+}

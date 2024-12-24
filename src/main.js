@@ -1,38 +1,76 @@
-function setup() {
 
-    SIZE = 8; // !!! Should not exceed 8
-    GRID_SIZE = 2**SIZE + 1; // Final size map
-    TILE_SIZE = 3;
-    RANGE_HEIGHT = [1, 16];
-    RANGE_RANDOM = [-4, 4];
-    SHRINK_COEFF_RANDOM = .42;
-    FIX_HEIGHT_ALONE_POINT = 8; //cell surrounded by X different heights will be one of them
-    //--Interactive Mode--
-    OFFSET_X = 40;
-    OFFSET_Y = 40;
-    INTERACTIVE_MODE = false; //If true, can see steps hitting RIGHT_ARROW
 
-    grid = [];
-    current_range_random = [...RANGE_RANDOM];
-    step = 1;
-    tmp_size = GRID_SIZE; // for interactive mode
-    color_map = new ColorMap();
-    display_borders = true;
+//import p5 from './p5.js';
 
-    let cvn = createCanvas(GRID_SIZE*TILE_SIZE, GRID_SIZE*TILE_SIZE);
-    cvn.id('map');
-    cvn.parent("left");
+import { Random } from './index.js'
+//import { Random } from 'random'
 
-    initGrid();
-    
-    if (!INTERACTIVE_MODE) {
-        calculateHeights(GRID_SIZE);
-        fixHeightAlonePoints(FIX_HEIGHT_ALONE_POINT);
-        drawHeightMap();
-        generateBorders();
-        color_map.setLegend(GRID_SIZE*GRID_SIZE);
-    }
-}
+
+
+let SIZE ;
+let GRID_SIZE ; // Final size map
+let TILE_SIZE;
+let RANGE_HEIGHT;
+let RANGE_RANDOM ;
+let SHRINK_COEFF_RANDOM;
+let FIX_HEIGHT_ALONE_POINT; 
+//--Interactive Mode--
+let OFFSET_X;
+let OFFSET_Y;
+let INTERACTIVE_MODE ; //If true, can see steps hitting RIGHT_ARROW
+
+let grid ;
+let current_range_random ;
+let step ;
+let tmp_size ;
+let color_map ;
+let display_borders ;
+let rng;
+
+const sketch = (p) => {
+  p.setup = function() {
+	SIZE = 8; // !!! Should not exceed 8
+	   GRID_SIZE = 2**SIZE + 1; // Final size map
+	   TILE_SIZE = 3;
+	   RANGE_HEIGHT = [1, 16];
+	   RANGE_RANDOM = [-16, 16];
+	   SHRINK_COEFF_RANDOM = .42;
+	   FIX_HEIGHT_ALONE_POINT = 8; //cell surrounded by X different heights will be one of them
+	   //--Interactive Mode--
+	   OFFSET_X = 40;
+	   OFFSET_Y = 40;
+	   INTERACTIVE_MODE = false; //If true, can see steps hitting RIGHT_ARROW
+
+	   grid = [];
+	   current_range_random = [...RANGE_RANDOM];
+	   step = 1;
+	   tmp_size = GRID_SIZE; // for interactive mode
+	   color_map = new ColorMap();
+	   display_borders = true;
+	   rng = new Random();//('my-seed-string');
+
+	   let cvn = p.createCanvas(GRID_SIZE*TILE_SIZE, GRID_SIZE*TILE_SIZE);
+	   cvn.id('map');
+	   cvn.parent("left");
+
+	   initGrid();
+	   
+	   if (!INTERACTIVE_MODE) {
+	       calculateHeights(GRID_SIZE);
+			normalizeGrid();
+	       fixHeightAlonePoints(FIX_HEIGHT_ALONE_POINT);
+			normalizeGrid();
+	       drawHeightMap();
+	       generateBorders();
+	       color_map.setLegend(GRID_SIZE*GRID_SIZE);
+	   }
+  };
+
+ 
+
+
+
+
 
 function initGrid() {
 
@@ -122,21 +160,21 @@ function calculateHeights(size) {
 
 function drawHeightMap() {
 
-    noStroke();
+    p.noStroke();
     for (let x = 0; x < GRID_SIZE; x++) {
         for (let y = 0; y < GRID_SIZE; y++) {
             
             let height = roundHeight(grid[x][y].height)
-            let col = color(color_map.getHeightColor(height));
-            fill(col);
-            rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            let col = p.color(color_map.getHeightColor(height));
+            p.fill(col);
+            p.rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
     }
 }
 
-function keyReleased() {
-
-    if (keyCode === RIGHT_ARROW && INTERACTIVE_MODE) {
+p.keyReleased =function () { 
+	let keyCode=p.keyCode; 
+    if (keyCode === p.RIGHT_ARROW && INTERACTIVE_MODE) {
 
         if (tmp_size >= 3){
             tmp_size = calculateHeights(tmp_size);
@@ -144,7 +182,7 @@ function keyReleased() {
         }
     }
 
-    if (keyCode === SHIFT) {
+    if (keyCode === p .SHIFT) {
 
         step = 1;
         current_range_random = [...RANGE_RANDOM];
@@ -152,20 +190,21 @@ function keyReleased() {
 
         initGrid();
         calculateHeights(GRID_SIZE);
+		normalizeGrid();
         fixHeightAlonePoints(FIX_HEIGHT_ALONE_POINT);
         drawHeightMap();
         generateBorders();
         color_map.setLegend(GRID_SIZE*GRID_SIZE);
     }
 
-    if (keyCode === RETURN) {
+    if (keyCode === p.RETURN) {
 
         let timeStamp = 
-            year() + "-" + month() + "-" + day() + 
-            "-" + hour() + "-" + minute() + "-" + second() 
-            + "-" + nf(millis(), 3, 0);
+            p.year() + "-" + p.month() + "-" + p.day() + 
+            "-" + p.hour() + "-" + p.minute() + "-" + p.second() 
+            + "-" + p.nf(p.millis(), 3, 0);
 
-        save(timeStamp + '.png');
+        p.save(timeStamp + '.png');
     }
     
     //b key
@@ -184,12 +223,12 @@ function generateBorders() {
         let height = roundHeight(grid[cx][cy].height);
 
             //we take four neigbours
-            north = {dir:"north", x:cx, y:cy-1};
-            east  = {dir:"east", x:cx+1, y:cy};
-            south = {dir:"south", x:cx, y:cy+1};
-            west  = {dir:"west", x:cx-1, y:cy};
+            let north = {dir:"north", x:cx, y:cy-1};
+            let east  = {dir:"east", x:cx+1, y:cy};
+            let south = {dir:"south", x:cx, y:cy+1};
+            let west  = {dir:"west", x:cx-1, y:cy};
 
-            neighbours = [north, east, south, west];
+            let  neighbours = [north, east, south, west];
 
             neighbours.forEach(n => {
                 
@@ -215,7 +254,7 @@ function generateBorders() {
 }
 
 function traceBorder(x, y, dir, col) {
-
+	let p1,p2;
     switch(dir) {
 
         case "north" : {
@@ -240,9 +279,34 @@ function traceBorder(x, y, dir, col) {
         break;
     }
 
-    stroke(col);
-    line(p1.x, p1.y, p2.x, p2.y);
+    p.stroke(col);
+    p.line(p1.x, p1.y, p2.x, p2.y);
 }
+
+
+function normalizeGrid() {
+
+	let min = Math.min();
+	let max = Math.max();
+	for (let x = 0; x < GRID_SIZE; x++) {
+		for (let y = 0; y < GRID_SIZE; y++) {
+			let current_height = grid[x][y].height;
+			min = Math.min(min, current_height);
+			max = Math.max(max, current_height);
+		}
+	}
+ 	let ratio=(RANGE_HEIGHT[1]-RANGE_HEIGHT[0])/ (max-min );
+	
+	for (let x = 0; x < GRID_SIZE; x++) {
+		for (let y = 0; y < GRID_SIZE; y++) {
+			let current_height = grid[x][y].height;
+			let new_height= Math.round ((current_height - min ) * ratio + RANGE_HEIGHT[0] );
+			grid[x][y].height= new_height;
+		}
+	}
+
+}
+
 
 function fixHeightAlonePoints(maxPoints) {
 
@@ -287,7 +351,8 @@ function getNeighbours(cx,cy) {
 }
 
 function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) ) + min;
+    //return Math.floor(Math.random() * (max - min + 1) ) + min;
+	return Math.floor(rng.float() * (max - min + 1) ) + min;
 }
 
 function getRdmHeight() {
@@ -302,15 +367,19 @@ function getRdm() {
 
 function roundHeight(height) {
 
-    let res = Math.round(height);
+	if (INTERACTIVE_MODE) {
+		let res = Math.round(height);
 
-    if (res < RANGE_HEIGHT[0])
-        return RANGE_HEIGHT[0];
+		if (res < RANGE_HEIGHT[0])
+			return RANGE_HEIGHT[0];
 
-    if (res > RANGE_HEIGHT[1])
-        return RANGE_HEIGHT[1];
-
-    return res;
+		if (res > RANGE_HEIGHT[1])
+			return RANGE_HEIGHT[1];
+		return res;
+	}
+	else {
+		return height;
+	}
 }
 
 function debugGrid() {
@@ -370,3 +439,9 @@ function ColorLuminance(hex, lum) {
     }
     return rgb;
 }
+
+
+};
+
+new p5(sketch);
+

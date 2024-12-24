@@ -1,0 +1,15 @@
+
+
+V0.1.0
+	- Introducing a build process with npm.
+    - using javascript modules.
+    - use "random" library ( https://github.com/transitive-bullshit/random)  in TypeScript instead of Math.random
+	- update around algorythm : change roundHeight to normalizeGrid
+		-the rounding algorithm for values ​​outside the expected value range no longer rounds by saturation but compresses all values ​​within the expected range.		
+	- histogram update with two digits after the decimal point
+
+Initial version :
+Fork of Map generator with Diamond-Square algorithm
+ 	github : https://github.com/bandeDeCodeurs/map_generator_diamond_square
+	author : Bande de Codeur ( https://youtu.be/bs0BQk2hH6I ) 
+	 
