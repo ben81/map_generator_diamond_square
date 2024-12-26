@@ -31,6 +31,8 @@ let rng;
 let seedValue;
 let toggleRoundingValue;
 let togglefixHeightAlonePointsValue;
+let togglecliffValue;
+let countcliff;
 
 const sketch = (p) => {
 	p.setup = function() {
@@ -85,6 +87,9 @@ const sketch = (p) => {
 		toggleRoundingValue = toggleRounding.checked;
 		let togglefixHeightAlonePoints = document.getElementById('togglefixHeightAlonePoints');
 		togglefixHeightAlonePointsValue = togglefixHeightAlonePoints.checked;
+		let togglecliff = document.getElementById('togglecliff');
+		togglecliffValue = togglecliff.checked;
+		
 		
 		let rangeShrinkCoeffRandom=document.getElementById('rangeShrinkCoeffRandom');
 		let rangeShrinkCoeffRandomValue= rangeShrinkCoeffRandom.value /100;
@@ -98,7 +103,10 @@ const sketch = (p) => {
 		initGrid();
 		calculateHeights(GRID_SIZE);
 		normalizeGrid();
+		computeCliff();
 		fixHeightAlonePoints(FIX_HEIGHT_ALONE_POINT);
+		
+		
 		drawHeightMap();
 		generateBorders();
 		color_map.setLegend(GRID_SIZE * GRID_SIZE, seedValue);
@@ -331,7 +339,65 @@ const sketch = (p) => {
 
 	}
 
+	function computeCliff() {
+		countcliff=0;
+		if (togglecliffValue) {
+			let test=true;
+		
+			while (test){
+				countcliff++;
+				test=false;
+				let secondaryGrid = [];
+				for (let x = 0; x < GRID_SIZE; x++) {
+					secondaryGrid[x] = [];
+					for (let y = 0; y < GRID_SIZE; y++) {
+						secondaryGrid[x][y] = new Point(x, y);
+					}
+				}
+				for (let x = 1; x < GRID_SIZE - 1; x++) {
+					for (let y = 1; y < GRID_SIZE - 1; y++) {
+						if (checkPoint(grid[x - 1][y], grid[x][y], grid[x + 1][y]) ||
+							checkPoint(grid[x][y - 1], grid[x][y], grid[x][y + 1]) ||
+							checkPoint(grid[x - 1][y - 1], grid[x][y], grid[x + 1][y + 1]) ||
+							checkPoint(grid[x - 1][y + 1], grid[x][y], grid[x + 1][y - 1])
+						) {
+							secondaryGrid[x][y].height = 1;
+						}
 
+					}
+				}
+				for (let x = 0; x < GRID_SIZE; x++) {
+					for (let y = 0; y < GRID_SIZE ; y++) {
+						if (secondaryGrid[x][y].height == 1) {
+							let d = (rng.int(0, 1) * 2 - 1);
+							grid[x][y].height += d;
+							test=true;
+						}
+					}
+				}
+				if (countcliff>15){
+					break;
+				}
+			}//while
+		}
+	}
+	
+	function checkPoint( pa, pb,  pc){	
+		let ha=pa.height;
+		let hb=pb.height;
+		let hc=pc.height;
+		let p12=ha-hb;
+		let p23=hb-hc;
+		if( p12>=1 && p23>=1){
+			return true;
+		}
+		if( p12<=-1 && p23<=-1){
+			return true;
+		}
+		return false;
+	}
+
+	
 	function fixHeightAlonePoints(maxPoints) {
 
 		if (togglefixHeightAlonePointsValue) {
@@ -412,14 +478,14 @@ const sketch = (p) => {
 		}
 	}
 
-	function debugGrid() {
+	/*function debugGrid() {
 
 		for (let x = 0; x < GRID_SIZE; x++) {
 			for (let y = 0; y < GRID_SIZE; y++) {
 				print(grid[x][y]);
 			}
 		}
-	}
+	}*/
 
 	function calculateAverage(array) {
 		return (array.reduce((sum, current) => sum + current) / array.length);
@@ -483,7 +549,10 @@ export function toggleCheckbox(){
 
 document.getElementById('toggleRounding').addEventListener('change', toggleCheckbox);
 document.getElementById('togglefixHeightAlonePoints').addEventListener('change', toggleCheckbox);
+document.getElementById('togglecliff').addEventListener('change', toggleCheckbox);
 document.getElementById('rangeShrinkCoeffRandom').addEventListener('change', toggleCheckbox);
+
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -492,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     rangeSlider.addEventListener('input', () => {
         const value = event.target.value;
-        tooltip.innerText = value/100;
+        tooltip.innerText = (value/100).toFixed(2);
         tooltip.style.display = 'block';
     });
 

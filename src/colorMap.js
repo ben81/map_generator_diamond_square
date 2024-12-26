@@ -72,7 +72,7 @@ export class ColorMap {
 
         tmp_array.forEach(el => {
 
-            let perc = Math.round(el.count/sizeGrid*10000) /100;
+            let perc = (Math.round(el.count/sizeGrid*10000) /100).toFixed(2);
 
             if (el.count > 0) {
                 html += "<div class='line-legend'>\n";
