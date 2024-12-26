@@ -54,7 +54,12 @@ class ColorMap {
         return this.data[ height].color;
     }
 
-    setLegend(sizeGrid) {
+    setLegend(sizeGrid, seed) {
+		
+		let htmlsed = "Seed : "+ seed +"<br/>";
+		
+		document.getElementById("divseed").replaceChildren();
+		        document.getElementById("divseed").innerHTML = htmlsed;
 
         let tmp_array = Object.values(this.data);
 
@@ -63,6 +68,7 @@ class ColorMap {
         })
 
         let html = "";
+	
 
         tmp_array.forEach(el => {
 
@@ -76,7 +82,8 @@ class ColorMap {
                 html += "</div>\n";
             }
         });
-
+		
+		
         document.getElementById("legend").replaceChildren();
         document.getElementById("legend").innerHTML = html;
     }

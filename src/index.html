@@ -8,7 +8,7 @@
     <script src="p5.min.js"></script> 
     <script src="point.js"></script>
     <script src="colorMap.js"></script>
-    <script type="module" src="main.js"></script>
+    <script  type="module" src="main.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,13 +16,42 @@
     <div id="left"></div>
     <div id="right">
         Press <span class="key">SHIFT</span> for generating a new map. <br>
-        Press <span class="key">ENTER</span> for saving the map as an image.<br>
-        Press <span class="key">B</span> for displaying / hidding borders.<br><br><br><br>
-        <span id="title-legend">Legend</span>
+        Press <span class="key">P</span> for saving the map as an image.<br>
+        Press <span class="key">B</span> for displaying / hidding borders.<br><br>
+        <label for="name">Seed (max 32 characters):</label>
+        <input type="text" name="name" id="seed"  maxlength="32" value="" /> 
+        <br/>
+		<div class="toggle-container">
+			<span class="toggle-title">Intermediate rounding</span> <label class="toggle">
+				<input type="checkbox" id="toggleRounding"   checked/> <span				
+				class="slider"></span>
+				
+			</label>
+		</div>
+		<div class="toggle-container">
+			<span class="toggle-title">Fix Height Alone Points</span> <label class="toggle">
+				<input type="checkbox" id="togglefixHeightAlonePoints"  checked/> <span
+				class="slider"></span>
+			</label>
+		</div>
+		<br>
+        <div id="divseed">
+         </div>
+        <span id="title-legend">Legend</span>  
         <div id="legend">
 
         </div>
-        <div id="creator">👨‍💻 Create by <span class="yt"><a href="https://www.youtube.com/channel/UCJtCTZHFRatUyy7K4raOGDA" target="_blank">Bande de Codeurs</a></span><br/>👨‍💻 Update by Benoit81</div>
+        <div id="creator">&#128104;&#8205;&#128187; Create by <span class="yt"><a href="https://www.youtube.com/channel/UCJtCTZHFRatUyy7K4raOGDA" target="_blank">Bande de Codeurs</a>
+        </span><br/>&#128104;&#8205;&#128187; Update by Benoit81</div>
     </div>
+    
+     <script type="module">
+        import  {toggleCheckbox}  from './main.js';
+
+        document.getElementById('toggleRounding').addEventListener('change', toggleCheckbox);
+		document.getElementById('togglefixHeightAlonePoints').addEventListener('change', toggleCheckbox);
+
+       
+    </script>
 </body>
 </html>
