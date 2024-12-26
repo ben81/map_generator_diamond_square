@@ -27,7 +27,7 @@ body {
 }
 
 #legend {
-	margin: 10px 0 0 0px;
+	margin: 10px 0 0  ;
 	display: table;
 	border: 1px solid black;
 	padding: 20px;
@@ -62,7 +62,7 @@ body {
 }
 
 #creator .yt a {
-	color:#CC0000;
+	color:#C00;
 }
 
 .toggle-container {
@@ -74,7 +74,6 @@ body {
 .toggle-title {
 	margin-right: 10px;
 	width: 300px;
-/* font-weight: bold; */
 }
 
 .toggle {
@@ -139,6 +138,6 @@ body {
 	transform: translateX(-50%);
 	border-width: 5px;
 	border-style: solid;
-	border-color: #333 transparent transparent transparent;
+	border-color: #333 transparent transparent ;
 }
 

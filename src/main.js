@@ -3,6 +3,8 @@
 //import p5 from './p5.js';
 
 import { Random } from './index.js'
+import { ColorMap} from './colorMap.js'
+import { Point} from './point.js'
 //import { Random } from 'random'
 
 
@@ -425,7 +427,7 @@ const sketch = (p) => {
 
 	function displayDebug() {
 
-		createCanvas(1200, 800);
+		p.createCanvas(1200, 800);
 
 		let diameter = 20;
 		let tile_size = 90;
@@ -436,17 +438,17 @@ const sketch = (p) => {
 				let posX = OFFSET_X + x * tile_size;
 				let posY = OFFSET_Y + y * tile_size;
 
-				fill('black');
-				textSize(16);
-				text("(" + x + "," + y + ")", posX - diameter / 2, posY - diameter);
+				p.fill('black');
+				p.textSize(16);
+				p.text("(" + x + "," + y + ")", posX - diameter / 2, posY - diameter);
 
-				let c = (grid[x][y].height > 0) ? color(0, 204, 0) : color(204, 0, 0);
-				fill(c);
-				circle(posX, posY, diameter);
+				let c = (grid[x][y].height > 0) ? p.color(0, 204, 0) : p.color(204, 0, 0);
+				p.fill(c);
+				p.circle(posX, posY, diameter);
 
-				fill('black');
-				textSize(16);
-				text((grid[x][y].height % 1 != 0) ? grid[x][y].height.toFixed(4) : grid[x][y].height, posX - diameter / 2, posY + diameter * 2);
+				p.fill('black');
+				p.textSize(16);
+				p.text((grid[x][y].height % 1 != 0) ? grid[x][y].height.toFixed(4) : grid[x][y].height, posX - diameter / 2, posY + diameter * 2);
 			}
 		}
 	}
@@ -474,7 +476,7 @@ const sketch = (p) => {
 let p5k=new p5(sketch);
 
 
-export function toggleCheckbox(event){
+export function toggleCheckbox(){
 	p5k.redrawAll();
 }
 
@@ -484,11 +486,11 @@ document.getElementById('togglefixHeightAlonePoints').addEventListener('change',
 document.getElementById('rangeShrinkCoeffRandom').addEventListener('change', toggleCheckbox);
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
     const rangeSlider = document.getElementById('rangeShrinkCoeffRandom');
     const tooltip = document.getElementById('tooltip');
 
-    rangeSlider.addEventListener('input', (event) => {
+    rangeSlider.addEventListener('input', () => {
         const value = event.target.value;
         tooltip.innerText = value/100;
         tooltip.style.display = 'block';

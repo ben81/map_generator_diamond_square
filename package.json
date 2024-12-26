@@ -9,7 +9,11 @@
     "copy-p5": "cp node_modules/p5/lib/p5.min.js dist/",
     "build": "mkdir -p dist && npm run copy-src  && npm run copy-random && npm run copy-p5",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "validate:html": "w3c-html-validator --continue ./src/index.html",
+    "validate:css": "stylelint ./src/*.css",
+    "validate:js": "eslint ./src/*.js",
+    "validate": "npm run validate:html && npm run validate:css && npm run validate:js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +21,11 @@
     "p5": "^1.11.2",
     "random": "^5.1.1",
     "server": "^1.0.41"
+  },
+  "devDependencies": {
+    "eslint": "^9.17.0",
+    "stylelint": "^16.12.0",
+    "stylelint-config-standard-scss": "^14.0.0",
+    "w3c-html-validator": "^1.8.2"
   }
- 
 }
