@@ -83,6 +83,10 @@ const sketch = (p) => {
 		toggleRoundingValue = toggleRounding.checked;
 		let togglefixHeightAlonePoints = document.getElementById('togglefixHeightAlonePoints');
 		togglefixHeightAlonePointsValue = togglefixHeightAlonePoints.checked;
+		
+		let rangeShrinkCoeffRandom=document.getElementById('rangeShrinkCoeffRandom');
+		let rangeShrinkCoeffRandomValue= rangeShrinkCoeffRandom.value /100;
+		SHRINK_COEFF_RANDOM=rangeShrinkCoeffRandomValue;
 		rng = new Random(seedValue);
 
 		step = 1;
@@ -474,3 +478,27 @@ export function toggleCheckbox(event){
 	p5k.redrawAll();
 }
 
+
+document.getElementById('toggleRounding').addEventListener('change', toggleCheckbox);
+document.getElementById('togglefixHeightAlonePoints').addEventListener('change', toggleCheckbox);
+document.getElementById('rangeShrinkCoeffRandom').addEventListener('change', toggleCheckbox);
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const rangeSlider = document.getElementById('rangeShrinkCoeffRandom');
+    const tooltip = document.getElementById('tooltip');
+
+    rangeSlider.addEventListener('input', (event) => {
+        const value = event.target.value;
+        tooltip.innerText = value/100;
+        tooltip.style.display = 'block';
+    });
+
+    rangeSlider.addEventListener('mouseout', () => {
+        tooltip.style.display = 'none';
+    });
+
+    rangeSlider.addEventListener('mouseover', () => {
+        tooltip.style.display = 'block';
+    });
+});

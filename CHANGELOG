@@ -11,7 +11,8 @@ V0.1.0
 	- add toggle buttons to 
 		- enable/disable rounding after each step.
 		- enable/disable fix height alone points algorythm.
-	
+	- add range button to
+		- change shrink coefficiant .
 
 Initial version :
 Fork of Map generator with Diamond-Square algorithm
