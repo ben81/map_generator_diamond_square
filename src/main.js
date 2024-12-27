@@ -389,16 +389,16 @@ const sketch = (p) => {
 	}
 	
 	function checkPoint( pa, pb,  pc){	
-		let ha=pa.height;
-		let hb=pb.height;
-		let hc=pc.height;
+		let ha=Math.round(pa.height);
+		let hb=Math.round(pb.height);
+		let hc=Math.round(pc.height);
 		let p12=ha-hb;
 		let p23=hb-hc;
 		let p13=ha-hc;
-		if( p12>=1 && p23>=1 && p13 <= 2.5){
+		if( p12>=1 && p23>=1 ){
 			return true;
 		}
-		if( p12<=-1 && p23<=-1&& p13 >= -2.5){
+		if( p12<=-1 && p23<=-1){
 			return true;
 		}
 		return false;
