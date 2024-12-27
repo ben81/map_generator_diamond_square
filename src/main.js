@@ -5,6 +5,8 @@
 import { Random } from './index.js'
 import { ColorMap} from './colorMap.js'
 import { Point} from './point.js'
+import { findAndReplaceGroups} from './point.js'
+
 //import { Random } from 'random'
 
 
@@ -68,10 +70,10 @@ const sketch = (p) => {
 		}
 	};
 	
-	p.redrawAll=	function () {
+	p.redrawAll = function() {
 		drawAll(false)
-		}
-	
+	}
+
 
 	function drawAll(updateSeed) {
 
@@ -89,11 +91,12 @@ const sketch = (p) => {
 		togglefixHeightAlonePointsValue = togglefixHeightAlonePoints.checked;
 		let togglecliff = document.getElementById('togglecliff');
 		togglecliffValue = togglecliff.checked;
-		
-		
-		let rangeShrinkCoeffRandom=document.getElementById('rangeShrinkCoeffRandom');
-		let rangeShrinkCoeffRandomValue= rangeShrinkCoeffRandom.value /100;
-		SHRINK_COEFF_RANDOM=rangeShrinkCoeffRandomValue;
+		let rangeRandomMax=document.getElementById('rangeRandomMax');
+		let rangeRandomMaxValue=rangeRandomMax.value;
+		RANGE_RANDOM = [-rangeRandomMaxValue, rangeRandomMaxValue];
+		let rangeShrinkCoeffRandom = document.getElementById('rangeShrinkCoeffRandom');
+		let rangeShrinkCoeffRandomValue = rangeShrinkCoeffRandom.value / 100;
+		SHRINK_COEFF_RANDOM = rangeShrinkCoeffRandomValue;
 		rng = new Random(seedValue);
 
 		step = 1;
@@ -105,8 +108,9 @@ const sketch = (p) => {
 		normalizeGrid();
 		computeCliff();
 		fixHeightAlonePoints(FIX_HEIGHT_ALONE_POINT);
-		
-		
+
+
+
 		drawHeightMap();
 		generateBorders();
 		color_map.setLegend(GRID_SIZE * GRID_SIZE, seedValue);
@@ -366,11 +370,13 @@ const sketch = (p) => {
 
 					}
 				}
+				let l=findAndReplaceGroups(secondaryGrid, grid,rng);
 				for (let x = 0; x < GRID_SIZE; x++) {
 					for (let y = 0; y < GRID_SIZE ; y++) {
-						if (secondaryGrid[x][y].height == 1) {
-							let d = (rng.int(0, 1) * 2 - 1);
-							grid[x][y].height += d;
+						if (secondaryGrid[x][y].height > 1) {
+							///let d = (rng.int(0, 1) * 2 - 1);
+							grid[x][y].height = l[secondaryGrid[x][y].height].rnd;
+							// d;
 							test=true;
 						}
 					}
@@ -388,10 +394,11 @@ const sketch = (p) => {
 		let hc=pc.height;
 		let p12=ha-hb;
 		let p23=hb-hc;
-		if( p12>=1 && p23>=1){
+		let p13=ha-hc;
+		if( p12>=1 && p23>=1 && p13 <= 2.5){
 			return true;
 		}
-		if( p12<=-1 && p23<=-1){
+		if( p12<=-1 && p23<=-1&& p13 >= -2.5){
 			return true;
 		}
 		return false;
@@ -546,7 +553,7 @@ export function toggleCheckbox(){
 	p5k.redrawAll();
 }
 
-
+document.getElementById('rangeRandomMax').addEventListener('change', toggleCheckbox);
 document.getElementById('toggleRounding').addEventListener('change', toggleCheckbox);
 document.getElementById('togglefixHeightAlonePoints').addEventListener('change', toggleCheckbox);
 document.getElementById('togglecliff').addEventListener('change', toggleCheckbox);
@@ -562,6 +569,25 @@ document.addEventListener('DOMContentLoaded', () => {
     rangeSlider.addEventListener('input', () => {
         const value = event.target.value;
         tooltip.innerText = (value/100).toFixed(2);
+        tooltip.style.display = 'block';
+    });
+
+    rangeSlider.addEventListener('mouseout', () => {
+        tooltip.style.display = 'none';
+    });
+
+    rangeSlider.addEventListener('mouseover', () => {
+        tooltip.style.display = 'block';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const rangeSlider = document.getElementById('rangeRandomMax');
+    const tooltip = document.getElementById('tooltipRandomMax');
+
+    rangeSlider.addEventListener('input', () => {
+        const value = event.target.value;
+        tooltip.innerText = (value);
         tooltip.style.display = 'block';
     });
 

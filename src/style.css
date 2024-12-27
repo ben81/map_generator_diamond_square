@@ -26,6 +26,21 @@ body {
 	font-weight: bold;
 }
 
+.container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 0 10px;  
+}
+
+.container > div {
+	padding: 0 20px;
+	background-color: #f0f0f0;
+	border: 1px solid #ccc;
+	border-radius : 12px;
+	height : 42px;
+}
+
+
 #legend {
 	margin: 10px 0 0  ;
 	display: table;
@@ -37,7 +52,7 @@ body {
 .line-legend {
 	width: 100%;
 	display: table-row;
-	height: 40px;
+	height: 30px;
 }
 
 .legend-color {
