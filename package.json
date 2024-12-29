@@ -5,11 +5,14 @@
   "main": "main.js",
   "scripts": {
     "clean": "rm dist/* -f ",
+    "copy-deps": "node copy-deps.js",
+    "postbuild": "mkdir -p dist/node_modules &&  npm run copy-deps",
     "copy-src": "cp src/*.html src/*.css src/*.ico dist/",
     "copy-random": "cp node_modules/random/dist/index.js node_modules/random/dist/index.js.map dist/",
+    "copy-dexie": "cp node_modules/dexie/dist/dexie.js dist/",
     "copy-p5": "cp node_modules/p5/lib/p5.js dist/",
     "build:js": "webpack",
-    "build": "mkdir -p dist   && npm run  build:js && npm run copy-src  && npm run copy-p5 && npm run copy-random",
+    "build": "mkdir -p dist   && npm run  build:js && npm run copy-src  && npm run copy-p5 && npm run copy-random &&  npm run copy-dexie",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "validate:html": "w3c-html-validator --continue ./src/index.html",
@@ -20,9 +23,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dexie": "^4.0.10",
     "p5": "^1.11.2",
     "random": "^5.1.1",
-    "server": "^1.0.41"
+    "tabulator-tables": "^6.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -33,6 +37,7 @@
     "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-uglify": "^3.0.2",
+    "ncp": "^2.0.0",
     "stylelint": "^16.12.0",
     "stylelint-config-standard-scss": "^14.0.0",
     "w3c-html-validator": "^1.8.2",

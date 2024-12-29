@@ -8,6 +8,7 @@ const p5 = require('p5')
 import { ColorMap} from './colorMap.js'
 import { Point} from './point.js'
 import { findAndReplaceGroups} from './point.js'
+import { Data} from './data.js'
 
 import { Random } from 'random'
 
@@ -32,11 +33,10 @@ let tmp_size;
 let color_map;
 let display_borders;
 let rng;
-let seedValue;
-let toggleRoundingValue;
-let togglefixHeightAlonePointsValue;
-let togglecliffValue;
+
+
 let countcliff;
+let data;
 
 const sketch = (p) => {
 	p.setup = function() {
@@ -64,11 +64,14 @@ const sketch = (p) => {
 		cvn.id('map');
 		cvn.parent("left");
 
-		initGrid();
+		//initGrid();
 
 		if (!INTERACTIVE_MODE) {
 			drawAll(true);
 
+		}else{
+			data= new Data(true);
+			initGrid();
 		}
 	};
 	
@@ -79,30 +82,17 @@ const sketch = (p) => {
 
 	function drawAll(updateSeed) {
 
-		if (updateSeed) {
-			seedValue = document.getElementById("seed").value;
-			if (seedValue == '') {
-				seedValue = "" + new Random().int(0, 2 ** 64 - 1);
-			}
-		}
 
-
-		let toggleRounding = document.getElementById('toggleRounding');
-		toggleRoundingValue = toggleRounding.checked;
-		let togglefixHeightAlonePoints = document.getElementById('togglefixHeightAlonePoints');
-		togglefixHeightAlonePointsValue = togglefixHeightAlonePoints.checked;
-		let togglecliff = document.getElementById('togglecliff');
-		togglecliffValue = togglecliff.checked;
-		let rangeRandomMax=document.getElementById('rangeRandomMax');
-		let rangeRandomMaxValue=rangeRandomMax.value;
-		RANGE_RANDOM = [-rangeRandomMaxValue, rangeRandomMaxValue];
-		let rangeShrinkCoeffRandom = document.getElementById('rangeShrinkCoeffRandom');
-		let rangeShrinkCoeffRandomValue = rangeShrinkCoeffRandom.value / 100;
-		SHRINK_COEFF_RANDOM = rangeShrinkCoeffRandomValue;
-		rng = new Random(seedValue);
+	
+		
+		 data= new Data(updateSeed,data!=null ? data.seedValue : 0);
+		 RANGE_RANDOM = data.rangeRandom;
+		 SHRINK_COEFF_RANDOM = data.rangeShrinkCoeff;
+		
+		rng = new Random(data.seedValue);
 
 		step = 1;
-		current_range_random = [...RANGE_RANDOM];
+		current_range_random = data.rangeRandom;// [...RANGE_RANDOM];
 		color_map = new ColorMap();
 
 		initGrid();
@@ -116,7 +106,7 @@ const sketch = (p) => {
 
 		drawHeightMap();
 		generateBorders();
-		color_map.setLegend(GRID_SIZE * GRID_SIZE, seedValue);
+		color_map.setLegend(GRID_SIZE * GRID_SIZE, data.seedValue);
 	}
 
 
@@ -245,6 +235,9 @@ const sketch = (p) => {
 
 			p.save(timeStamp + '.png');
 		}
+		if (keyCode === 83){ //p.RETURN) {
+			data.saveDB();	
+		}
 
 		//b key
 		if (keyCode === 66) {
@@ -348,7 +341,7 @@ const sketch = (p) => {
 
 	function computeCliff() {
 		countcliff=0;
-		if (togglecliffValue) {
+		if (data.togglecliffValue) {
 			let test=true;
 		
 			while (test){
@@ -396,7 +389,7 @@ const sketch = (p) => {
 						}
 					}
 				}
-				if (countcliff>20){
+				if (countcliff>10){
 					break;
 				}
 			}//while
@@ -422,7 +415,7 @@ const sketch = (p) => {
 	
 	function fixHeightAlonePoints(maxPoints) {
 
-		if (togglefixHeightAlonePointsValue) {
+		if (data.togglefixHeightAlonePointsValue) {
 			for (let x = 0; x < GRID_SIZE; x++) {
 				for (let y = 0; y < GRID_SIZE; y++) {
 
@@ -467,7 +460,7 @@ const sketch = (p) => {
 	function getRndInteger(min, max) {
 		//return Math.floor(Math.random() * (max - min + 1) ) + min;
 		let value = rng.float() * (max - min + 1) + min;
-		if (toggleRoundingValue)
+		if (data.toggleRoundingValue)
 			return Math.floor(value);
 		else
 			return value;

@@ -8,9 +8,12 @@
     <script type="module" src="bundle.js"></script> 
     <script type="module" src="index.js"></script>
     <script type="module" src="p5.js"></script>
+    <script type="module" src="node_modules/tabulator-tables/dist/js/tabulator.js"></script>
+   
     <!--   <script type="module" src="colorMap.js"></script>
     <script  type="module" src="main.js"></script> -->
     <link rel="stylesheet" href="style.css">
+     <link href="https://unpkg.com/tabulator-tables@5.2.7/dist/css/tabulator.min.css" rel="stylesheet">
 </head>
 <body>
     <h1>Map Generator : Diamond-square algorithm</h1>
@@ -20,7 +23,7 @@
 		Press <span class="key">P</span> for saving the map as an image.<br>
 		Press <span class="key">B</span> for displaying / hidding borders.<br>
 		<br>
-		<form> 
+	<!--  	<form>--> 
 		 <div class="container">
 		<div class="toggle-container">
 		<span class="toggle-title">Seed (max 32 characters):</span>
@@ -68,8 +71,16 @@
 		</div>
 		
 		</div>
-		</form>
+	<!--  	</form> -->
 		<br>
+		<div id="example-table"></div>
+		<div id="context-menu" class="context-menu">
+        <ul>
+            <li data-action="edit">Edit</li>
+            <li data-action="delete">Delete</li>
+            <li data-action="view">View Details</li>
+        </ul>
+    </div>
         <div id="divseed">
          </div>
         <span id="title-legend">Legend</span>  
@@ -83,7 +94,9 @@
         <div id="legend">
 
         </div>
-        <div id="creator">&#128104;&#8205;&#128187; Create by <span class="yt"><a href="https://www.youtube.com/channel/UCJtCTZHFRatUyy7K4raOGDA" target="_blank">Bande de Codeurs</a>
+		
+			
+		<div id="creator">&#128104;&#8205;&#128187; Create by <span class="yt"><a href="https://www.youtube.com/channel/UCJtCTZHFRatUyy7K4raOGDA" target="_blank">Bande de Codeurs</a>
         </span><br>&#128104;&#8205;&#128187; Update by Benoit81</div>
     </div>
     

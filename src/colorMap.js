@@ -59,7 +59,7 @@ export class ColorMap {
 		let htmlsed = "Seed : "+ seed +"<br/>";
 		
 		document.getElementById("divseed").replaceChildren();
-		        document.getElementById("divseed").innerHTML = htmlsed;
+		document.getElementById("divseed").innerHTML = htmlsed;
 
         let tmp_array = Object.values(this.data);
 

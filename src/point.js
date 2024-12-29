@@ -28,12 +28,12 @@ export function findAndReplaceGroups(_secondary, grid, rng) {
 	let cliff = _secondary;
 	const rows = cliff.length;
 	const cols = cliff[0].length;
-	let groupId = 2; // Commencer à partir de 2 pour les groupes
+	let groupId = 2; // Commencer a partir de 2 pour les groupes
 	let array = [new Cliff(0), new Cliff(2)];
 
 	// Fonction de parcours en profondeur (DFS)
 	function dfs(x, y, acliff) {
-		// Vérifier les limites de la grille
+		// checj les limites de la grille
 		if (x < 0 || x >= rows || y < 0 || y >= cols || cliff[x][y].height !== 1) {
 			return;
 		}
