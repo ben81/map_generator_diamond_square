@@ -1,37 +1,37 @@
 export class Point {
 
-    constructor(x,y,h=0) {
+	constructor(x, y, h = 0) {
 
-        this.posX = x;
-        this.posY = y;
-        this.height = h;
-    }
+		this.posX = x;
+		this.posY = y;
+		this.height = h;
+	}
 }
 
 export class Cliff {
 
-    constructor(groupId) {
-		  
-        this.groupId = groupId;
-		this.min=Math.min();
-		this.max=Math.max();
-    }
-	
-	 addPoint(point){
-		this.min=Math.min(this.min, point);
-		this.max=Math.max(this.max, point);
+	constructor(groupId) {
+
+		this.groupId = groupId;
+		this.min = Math.min();
+		this.max = Math.max();
+	}
+
+	addPoint(point) {
+		this.min = Math.min(this.min, point);
+		this.max = Math.max(this.max, point);
 	}
 }
 
 
 export function findAndReplaceGroups(_secondary, grid, rng) {
 	let cliff = _secondary;
-  const rows = cliff.length;
-  const cols = cliff[0].length;
-  let groupId = 2; // Commencer à partir de 2 pour les groupes
-  let array=[new Cliff(0), new Cliff(2) ]; 
+	const rows = cliff.length;
+	const cols = cliff[0].length;
+	let groupId = 2; // Commencer à partir de 2 pour les groupes
+	let array = [new Cliff(0), new Cliff(2)];
 
-  // Fonction de parcours en profondeur (DFS)
+	// Fonction de parcours en profondeur (DFS)
 	function dfs(x, y, acliff) {
 		// Vérifier les limites de la grille
 		if (x < 0 || x >= rows || y < 0 || y >= cols || cliff[x][y].height !== 1) {
@@ -53,25 +53,25 @@ export function findAndReplaceGroups(_secondary, grid, rng) {
 		dfs(x + 1, y + 1, acliff); // Bas Droite
 	}
 
-  // Parcourir toute la grille
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      if (cliff[i][j].height === 1) {
-        // Commencer un nouveau groupe
-		let acliff= new Cliff(groupId);
-		array.push(acliff);
-        dfs(i, j, acliff);
-        groupId++;
-      }
-    }
-  }
-  array.forEach( function(c) {
-	if ( rng.int(0, 1)==0) {
-		c.rnd=c.min-1;
+	// Parcourir toute la grille
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			if (cliff[i][j].height === 1) {
+				// Commencer un nouveau groupe
+				let acliff = new Cliff(groupId);
+				array.push(acliff);
+				dfs(i, j, acliff);
+				groupId++;
+			}
+		}
 	}
-	else{
-		c.rnd=c.max+1;
-	}
-  });
-  return array;
+	array.forEach(function(c) {
+		if (rng.boolean()) {
+			c.rnd = c.max + 1;
+		}
+		else {
+			c.rnd = c.min - 1;
+		}
+	});
+	return array;
 }

@@ -63,9 +63,14 @@ export class ColorMap {
 
         let tmp_array = Object.values(this.data);
 
+		
+		let toggleSort = document.getElementById('toggleSort');
+			let toggleSortValue = toggleSort.checked;
+		if (toggleSortValue){
         tmp_array.sort(function(a,b){
             return b.count - a.count;
-        })
+        });
+		}
 
         let html = "";
 	

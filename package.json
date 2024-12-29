@@ -4,9 +4,9 @@
   "description": "map generator",
   "main": "main.js",
   "scripts": {
-  	"clean": "rm dist/* -f " ,
+    "clean": "rm dist/* -f ",
     "copy-src": "cp src/*.html src/*.css src/*.ico dist/",
-    "copy-random": "cp node_modules/random/dist/* dist/",
+    "copy-random": "cp node_modules/random/dist/index.js node_modules/random/dist/index.js.map dist/",
     "copy-p5": "cp node_modules/p5/lib/p5.js dist/",
     "build:js": "webpack",
     "build": "mkdir -p dist   && npm run  build:js && npm run copy-src  && npm run copy-p5 && npm run copy-random",

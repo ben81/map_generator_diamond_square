@@ -573,6 +573,8 @@ document.getElementById('toggleRounding').addEventListener('change', toggleCheck
 document.getElementById('togglefixHeightAlonePoints').addEventListener('change', toggleCheckbox);
 document.getElementById('togglecliff').addEventListener('change', toggleCheckbox);
 document.getElementById('rangeShrinkCoeffRandom').addEventListener('change', toggleCheckbox);
+document.getElementById('toggleSort').addEventListener('change', toggleCheckbox);
+
 
 
 
