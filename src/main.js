@@ -1,13 +1,15 @@
 
 
-//import p5 from './p5.js';
+//import { p5 } from 'p5';
+const p5 = require('p5')
+//const random = require('random')
 
-import { Random } from './index.js'
+//import { Random } from './index.js'
 import { ColorMap} from './colorMap.js'
 import { Point} from './point.js'
 import { findAndReplaceGroups} from './point.js'
 
-//import { Random } from 'random'
+import { Random } from 'random'
 
 
 
@@ -108,6 +110,7 @@ const sketch = (p) => {
 		normalizeGrid();
 		computeCliff();
 		fixHeightAlonePoints(FIX_HEIGHT_ALONE_POINT);
+		computeCliff();
 
 
 
@@ -363,7 +366,19 @@ const sketch = (p) => {
 						if (checkPoint(grid[x - 1][y], grid[x][y], grid[x + 1][y]) ||
 							checkPoint(grid[x][y - 1], grid[x][y], grid[x][y + 1]) ||
 							checkPoint(grid[x - 1][y - 1], grid[x][y], grid[x + 1][y + 1]) ||
-							checkPoint(grid[x - 1][y + 1], grid[x][y], grid[x + 1][y - 1])
+							checkPoint(grid[x - 1][y + 1], grid[x][y], grid[x + 1][y - 1]) ||
+							
+							checkPoint(grid[x - 1][y-1], grid[x][y], grid[x + 1][y]) ||
+							checkPoint(grid[x - 1][y], grid[x][y], grid[x + 1][y-1]) ||
+							checkPoint(grid[x - 1][y+1], grid[x][y], grid[x + 1][y]) ||
+							checkPoint(grid[x - 1][y], grid[x][y], grid[x + 1][y+1]) ||
+							
+							checkPoint(grid[x-1][y - 1], grid[x][y], grid[x][y + 1]) ||
+							checkPoint(grid[x][y - 1], grid[x][y], grid[x-1][y + 1]) ||
+							checkPoint(grid[x+1][y - 1], grid[x][y], grid[x][y + 1]) ||
+							checkPoint(grid[x][y - 1], grid[x][y], grid[x+1][y + 1]) 
+							
+							
 						) {
 							secondaryGrid[x][y].height = 1;
 						}
@@ -381,7 +396,7 @@ const sketch = (p) => {
 						}
 					}
 				}
-				if (countcliff>15){
+				if (countcliff>20){
 					break;
 				}
 			}//while
@@ -389,12 +404,12 @@ const sketch = (p) => {
 	}
 	
 	function checkPoint( pa, pb,  pc){	
-		let ha=Math.round(pa.height);
-		let hb=Math.round(pb.height);
-		let hc=Math.round(pc.height);
+		let ha=(pa.height);
+		let hb=(pb.height);
+		let hc=(pc.height);
 		let p12=ha-hb;
 		let p23=hb-hc;
-		let p13=ha-hc;
+		//let p13=ha-hc;
 		if( p12>=1 && p23>=1 ){
 			return true;
 		}

@@ -4,10 +4,12 @@
   "description": "map generator",
   "main": "main.js",
   "scripts": {
-    "copy-src": "cp src/* dist/",
+  	"clean": "rm dist/* -f " ,
+    "copy-src": "cp src/*.html src/*.css src/*.ico dist/",
     "copy-random": "cp node_modules/random/dist/* dist/",
-    "copy-p5": "cp node_modules/p5/lib/p5.min.js dist/",
-    "build": "mkdir -p dist && npm run copy-src  && npm run copy-random && npm run copy-p5",
+    "copy-p5": "cp node_modules/p5/lib/p5.js dist/",
+    "build:js": "webpack",
+    "build": "mkdir -p dist   && npm run  build:js && npm run copy-src  && npm run copy-p5 && npm run copy-random",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "validate:html": "w3c-html-validator --continue ./src/index.html",
@@ -23,9 +25,18 @@
     "server": "^1.0.41"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "babel-loader": "^9.2.1",
     "eslint": "^9.17.0",
+    "gulp": "^5.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.2",
     "stylelint": "^16.12.0",
     "stylelint-config-standard-scss": "^14.0.0",
-    "w3c-html-validator": "^1.8.2"
+    "w3c-html-validator": "^1.8.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
   }
 }
