@@ -2,6 +2,7 @@
 import Dexie from 'dexie';
 import { Random } from 'random'
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
+import {toggleCheckbox} from './main.js';
 
 
 const db = new Dexie('configurations');
@@ -89,52 +90,94 @@ db.open().catch(function(err) {
 
 let table;
 
+function deleteRow(row){
+	console.log('To Record deleted with id:', row.getData().id);
+	db.configure.delete(row.getData().id).then(function() {
+		console.log('Record deleted with id:', row.getData().id);
+	}).catch(function(err) {
+		console.error('Error deleting record:', err);
+	});
+	row.delete();
+}
+
+
+function applyRow(rowData){
+	
+	
+	setRangeValue("seed",rowData.seedValue);	
+	setToggleValue('toggleRounding',rowData.toggleRoundingValue);
+	setToggleValue('togglefixHeightAlonePoints', rowData.togglefixHeightAlonePointsValue);
+	setToggleValue('togglecliff',rowData.togglecliffValue);
+	setRangeValue('rangeRandomMax',rowData.rangeRandomMaxValue);
+	setRangeValue('rangeShrinkCoeffRandom',rowData.rangeShrinkCoeffRandomValue);
+	toggleCheckbox();
+}
+
 db.configure.toArray().then(function(data) {
 	console.log('All items in the table:', data);
 
+	
+	
+	
+
+	
 	table = new Tabulator("#example-table", {
-		resizableColumnFit:true,
+		resizableColumnFit: true,
 		data: data,
 		columns: [
 			//{title:"id", field:"id", sorter:"number"},
-			{ title: "name", field: "name", sorter: "string" },
+			{ title: "name", field: "name", sorter: "string"},
 			{ title: "seedValue", field: "seedValue", sorter: "number" },
-			{ title: "toggleRounding", field: "toggleRoundingValue", sorter: "boolean" },
-			{ title: "togglecliff", field: "togglecliffValue", sorter: "boolean" },
-			{ title: "togglefixHeightAlonePoints", field: "togglefixHeightAlonePointsValue", sorter: "number" },
-			{ title: "rangeRandomMax", field: "rangeRandomMaxValue", sorter: "number" },
+			{ title: "rangeRandomMax", field: "rangeRandomMaxValue", sorter: "number"},
+			{ title: "Rounding", field: "toggleRoundingValue", sorter: "boolean" },			
+			{ title: "togglefixHeightAlonePoints", field: "togglefixHeightAlonePointsValue", sorter: "boolean" },
+			{ title: "togglecliff", field: "togglecliffValue", sorter: "boolean"},
 			{ title: "rangeShrinkCoeffRandom", field: "rangeShrinkCoeffRandomValue", sorter: "number" },
 
-		],	
-		rowContextMenu: [
-			{
-				label: "Apply Row",
-				action: function(e, row) {
-					// row.delete();
-				}
-
-			},			{
-			          separator:true,
-			      },
-			{
-				label: "Delete Row",
-				action: function(e, row) {
-					//row.delete();
-				}
-			}
 		],
+	
+		layout:"fitColumns",
+		popupContainer:"#modal-div", //append menu to this element
+	
+			rowContextMenu: function(e, row) {
+			       e.preventDefault();
+			       const menu = document.getElementById("context-menu");
+			       menu.style.display = "block";
+			       menu.style.left = e.clientX + "px";
+			       menu.style.top = e.clientY + "px";
+
+			       // Ajouter des gestionnaires d'événements pour les éléments du menu
+			       const items = menu.getElementsByTagName("li");
+				items.forEach(function(element) {
+					element.onclick = function(e) {
+						const action = e.target.getAttribute("data-action");
+						if (action === "apply") {
+							applyRow(row.getData());
+						} else if (action === "delete") {
+							deleteRow(row);
+						}
+						menu.style.display = "none";
+					};
+				});
+
+
+			       // Masquer le menu contextuel lorsque l'utilisateur clique en dehors
+			       document.addEventListener("click", function() {
+			           menu.style.display = "none";
+			       }, { once: true });
+			   },
 
 	});
 	//////table.setHeight(500)
 
-	
+
 
 
 
 });
 
 
-	
-	
+
+
 
 

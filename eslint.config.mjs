@@ -21,6 +21,6 @@ export default [...compat.extends("eslint:recommended"), {
         ecmaVersion: 12,
         sourceType: "module",
     },
-	files: ["src/*.js"],
+	files: ["src/*.js" ],
     rules: {},
 }];
