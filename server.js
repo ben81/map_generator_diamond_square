@@ -15,6 +15,7 @@ app.get('*', (req, res) => {
   const map = {
     '.html': 'text/html',
     '.js': 'application/javascript',
+	'.map': 'application/json',
     '.css': 'text/css',
     '.png': 'image/png',
     '.jpg': 'image/jpg',

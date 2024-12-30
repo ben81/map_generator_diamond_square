@@ -2,7 +2,7 @@
 import Dexie from 'dexie';
 import { Random } from 'random'
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
-import {toggleCheckbox} from './main.js';
+import { toggleCheckbox } from './main.js';
 
 
 const db = new Dexie('configurations');
@@ -90,7 +90,7 @@ db.open().catch(function(err) {
 
 let table;
 
-function deleteRow(row){
+function deleteRow(row) {
 	console.log('To Record deleted with id:', row.getData().id);
 	db.configure.delete(row.getData().id).then(function() {
 		console.log('Record deleted with id:', row.getData().id);
@@ -101,83 +101,73 @@ function deleteRow(row){
 }
 
 
-function applyRow(rowData){
-	
-	
-	setRangeValue("seed",rowData.seedValue);	
-	setToggleValue('toggleRounding',rowData.toggleRoundingValue);
+function applyRow(rowData) {
+
+
+	setRangeValue("seed", rowData.seedValue);
+	setToggleValue('toggleRounding', rowData.toggleRoundingValue);
 	setToggleValue('togglefixHeightAlonePoints', rowData.togglefixHeightAlonePointsValue);
-	setToggleValue('togglecliff',rowData.togglecliffValue);
-	setRangeValue('rangeRandomMax',rowData.rangeRandomMaxValue);
-	setRangeValue('rangeShrinkCoeffRandom',rowData.rangeShrinkCoeffRandomValue);
+	setToggleValue('togglecliff', rowData.togglecliffValue);
+	setRangeValue('rangeRandomMax', rowData.rangeRandomMaxValue);
+	setRangeValue('rangeShrinkCoeffRandom', rowData.rangeShrinkCoeffRandomValue);
 	toggleCheckbox();
 }
 
 db.configure.toArray().then(function(data) {
 	console.log('All items in the table:', data);
 
-	
-	
-	
 
-	
+
+
+
+
 	table = new Tabulator("#example-table", {
 		resizableColumnFit: true,
 		data: data,
 		columns: [
 			//{title:"id", field:"id", sorter:"number"},
-			{ title: "name", field: "name", sorter: "string"},
-			{ title: "seedValue", field: "seedValue", sorter: "number" },
-			{ title: "rangeRandomMax", field: "rangeRandomMaxValue", sorter: "number"},
-			{ title: "Rounding", field: "toggleRoundingValue", sorter: "boolean" },			
-			{ title: "togglefixHeightAlonePoints", field: "togglefixHeightAlonePointsValue", sorter: "boolean" },
-			{ title: "togglecliff", field: "togglecliffValue", sorter: "boolean"},
-			{ title: "rangeShrinkCoeffRandom", field: "rangeShrinkCoeffRandomValue", sorter: "number" },
+			{ title: "name", field: "name", sorter: "string" },
+			{ title: "seed", field: "seedValue", sorter: "number" },
+			{ title: "range Random Max", field: "rangeRandomMaxValue", sorter: "number" },
+			{ title: "Rounding", field: "toggleRoundingValue", sorter: "boolean" },
+			{ title: "fix Height Alone Points", field: "togglefixHeightAlonePointsValue", sorter: "boolean" },
+			{ title: "Cliff", field: "togglecliffValue", sorter: "boolean" },
+			{ title: "range Shrink Coeff Random", field: "rangeShrinkCoeffRandomValue", sorter: "number" },
 
 		],
-	
-		layout:"fitColumns",
-		popupContainer:"#modal-div", //append menu to this element
-	
-			rowContextMenu: function(e, row) {
-			       e.preventDefault();
-			       const menu = document.getElementById("context-menu");
-			       menu.style.display = "block";
-			       menu.style.left = e.clientX + "px";
-			       menu.style.top = e.clientY + "px";
 
-			       // Ajouter des gestionnaires d'événements pour les éléments du menu
-			       const items = menu.getElementsByTagName("li");
-				items.forEach(function(element) {
-					element.onclick = function(e) {
-						const action = e.target.getAttribute("data-action");
-						if (action === "apply") {
-							applyRow(row.getData());
-						} else if (action === "delete") {
-							deleteRow(row);
-						}
-						menu.style.display = "none";
-					};
-				});
+		layout: "fitColumns",
+		popupContainer: "#modal-div", //append menu to this element
+
+		rowContextMenu: function(e, row) {
+			e.preventDefault();
+			const menu = document.getElementById("context-menu");
+			menu.style.display = "block";
+			menu.style.left = e.clientX + "px";
+			menu.style.top = e.clientY + "px";
+
+			// Ajouter des gestionnaires d'événements pour les éléments du menu
+			const items = menu.getElementsByTagName("li");
+			items.forEach(function(element) {
+				element.onclick = function(e) {
+					const action = e.target.getAttribute("data-action");
+					if (action === "apply") {
+						applyRow(row.getData());
+					} else if (action === "delete") {
+						deleteRow(row);
+					}
+					menu.style.display = "none";
+				};
+			});
 
 
-			       // Masquer le menu contextuel lorsque l'utilisateur clique en dehors
-			       document.addEventListener("click", function() {
-			           menu.style.display = "none";
-			       }, { once: true });
-			   },
+			// Masquer le menu contextuel lorsque l'utilisateur clique en dehors
+			document.addEventListener("click", function() {
+				menu.style.display = "none";
+			}, { once: true });
+		},
 
 	});
 	//////table.setHeight(500)
 
-
-
-
-
 });
-
-
-
-
-
-

@@ -12,7 +12,7 @@
     "copy-dexie": "cp node_modules/dexie/dist/dexie.js dist/",
     "copy-p5": "cp node_modules/p5/lib/p5.js dist/",
     "build:js": "webpack",
-    "build": "mkdir -p dist   && npm run  build:js && npm run copy-src  && npm run copy-p5 && npm run copy-random &&  npm run copy-dexie",
+    "build": "mkdir -p dist   && npm run  build:js && npm run copy-src ",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "validate:html": "w3c-html-validator --continue ./src/index.html",
@@ -24,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "dexie": "^4.0.10",
+    "express": "^4.21.2",
     "p5": "^1.11.2",
     "random": "^5.1.1",
     "tabulator-tables": "^6.3.0"

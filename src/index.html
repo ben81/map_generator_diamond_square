@@ -6,14 +6,14 @@
     <title>Map Generator</title>
     
     <script type="module" src="bundle.js"></script> 
-    <script type="module" src="index.js"></script>
-    <script type="module" src="p5.js"></script>
-    <script type="module" src="node_modules/tabulator-tables/dist/js/tabulator.js"></script>
+    <script type="module" src="node_modules/random/index.js"></script>
+    <script type="module" src="node_modules/p5/p5.js"></script>
+    <script type="module" src="node_modules/tabulator-tables/js/tabulator.js"></script>
    
-    <!--   <script type="module" src="colorMap.js"></script>
-    <script  type="module" src="main.js"></script> -->
+    
+    
     <link rel="stylesheet" href="style.css">
-     <link href="https://unpkg.com/tabulator-tables@5.2.7/dist/css/tabulator.min.css" rel="stylesheet">
+     <link href="node_modules/tabulator-tables/css/tabulator.min.css" rel="stylesheet">
 </head>
 <body>
     <h1>Map Generator : Diamond-square algorithm</h1>
@@ -22,6 +22,7 @@
 		Press <span class="key">SHIFT</span> for generating a new map. <br>
 		Press <span class="key">P</span> for saving the map as an image.<br>
 		Press <span class="key">B</span> for displaying / hidding borders.<br>
+		Press <span class="key">S</span> for saving the configuration.<br>
 		<br>
 	<!--  	<form>--> 
 		 <div class="container">
@@ -73,7 +74,7 @@
 		</div>
 	<!--  	</form> -->
 		<br>
-		<div id="example-table"></div>
+		<div id="example-table" style="border-radius: 8px;"></div>
 		<div id="context-menu" class="context-menu">
         <ul>
             <li data-action="apply">Apply</li>
