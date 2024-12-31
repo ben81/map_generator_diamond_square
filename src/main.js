@@ -697,6 +697,10 @@ const onPointerDown = (event, thumb) => {
 				maxValue = value;
 			}
 		}
+		if (minValue<0) minValue=0;
+		if (maxValue<0) maxValue=0;
+		if (minValue>100) minValue=100;
+		if (maxValue>100) maxValue=100;
 
 		updateSlider();
 		p5k.redrawAll();
