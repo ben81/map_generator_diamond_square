@@ -1,106 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map Generator</title>
-    
-    <script type="module" src="bundle.js"></script> 
-    <script type="module" src="node_modules/random/index.js"></script>
-    <script type="module" src="node_modules/p5/p5.js"></script>
-    <script type="module" src="node_modules/tabulator-tables/js/tabulator.js"></script>
-   
-    
-    
-    <link rel="stylesheet" href="style.css">
-     <link href="node_modules/tabulator-tables/css/tabulator.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map Generator</title>
+
+<script type="module" src="bundle.js"></script>
+<script type="module" src="node_modules/random/index.js"></script>
+<script type="module" src="node_modules/p5/p5.js"></script>
+<script type="module"
+	src="node_modules/tabulator-tables/js/tabulator.js"></script>
+<script src="node_modules/dual-range-bar/dual-range-bar.min.js"></script>
+
+
+
+<link rel="stylesheet" href="style.css">
+<link href="node_modules/tabulator-tables/css/tabulator.min.css"
+	rel="stylesheet">
 </head>
 <body>
-    <h1>Map Generator : Diamond-square algorithm</h1>
-    <div id="left"></div>
+	<h1>Map Generator : Diamond-square algorithm</h1>
+	<div id="left"></div>
 	<div id="right">
 		Press <span class="key">SHIFT</span> for generating a new map. <br>
 		Press <span class="key">P</span> for saving the map as an image.<br>
 		Press <span class="key">B</span> for displaying / hidding borders.<br>
 		Press <span class="key">S</span> for saving the configuration.<br>
 		<br>
-	<!--  	<form>--> 
-		 <div class="container">
-		<div class="toggle-container">
-		<span class="toggle-title">Seed (max 32 characters):</span>
-		<input type="text" name="name" id="seed" maxlength="32" > 
-		</div>		
-		<div class="toggle-container">
-			<span class="toggle-title">Random max value</span>
-			<div class="range-container">
-				<input type="range" class="range-slider" id="rangeRandomMax" min="1" 	max="16" value="16">
-				<div class="tooltip" id="tooltipRandomMax">16</div>
-
+		<!--  	<form>-->
+		<div class="container">
+			<div class="toggle-container">
+				<span class="toggle-title">Seed (max 32 characters):</span> <input
+					type="text" name="name" id="seed" maxlength="32">
 			</div>
-		</div>
-		<div class="toggle-container">
-			<span class="toggle-title">Intermediate rounding</span>
-			<label 	class="toggle"> 
-			<input type="checkbox" id="toggleRounding" checked > 
-			<span class="slider"></span>
+			<div class="toggle-container">
+				<span class="toggle-title">Random max value</span>
+				<div class="range-container">
+					<input type="range" class="range-slider" id="rangeRandomMax"
+						min="1" max="16" value="16">
+					<div class="tooltip" id="tooltipRandomMax">16</div>
 
-			</label>
-		</div>
-		<div class="toggle-container">
-			<span class="toggle-title">Fix Height Alone Points</span>
-			 <label	class="toggle">
-				 <input type="checkbox"	id="togglefixHeightAlonePoints" checked >
-				 <span class="slider">
-				 </span>
-			</label>
-		</div>
-		<div class="toggle-container">
-			<span class="toggle-title">Cliffs</span>
-			 <label	class="toggle">
-				 <input type="checkbox"	id="togglecliff"  >
-				 <span class="slider">
-				 </span>
-			</label>
-		</div>
-		<div class="toggle-container">
-			<span class="toggle-title">Shrink coeff random</span>
-			<div class="range-container">
-				<input type="range" class="range-slider" id="rangeShrinkCoeffRandom" min="0" 	max="100" value="42">
-				<div class="tooltip" id="tooltip">0.42</div>
-
+				</div>
 			</div>
-		</div>
-		
-		</div>
-	<!--  	</form> -->
-		<br>
-		<div id="example-table" style="border-radius: 8px;"></div>
-		<div id="context-menu" class="context-menu">
-        <ul>
-            <li data-action="apply">Apply</li>
-            <li data-action="delete">Delete</li>
-        
-        </ul>
-    </div>
-        <div id="divseed">
-         </div>
-        <span id="title-legend">Legend</span>  
-        <div class="toggle-container">
-			<span class="toggle-title">Sort by value</span>
-			<label 	class="toggle"> 
-			<input type="checkbox" id="toggleSort" checked > 
-			<span class="slider"></span>
-			</label>
-		</div>
-        <div id="legend">
+			<div class="toggle-container">
+				<span class="toggle-title">Intermediate rounding</span> <label
+					class="toggle"> <input type="checkbox" id="toggleRounding"
+					checked> <span class="slider"></span>
 
-        </div>
-		
-			
-		<div id="creator">&#128104;&#8205;&#128187; Create by <span class="yt"><a href="https://www.youtube.com/channel/UCJtCTZHFRatUyy7K4raOGDA" target="_blank">Bande de Codeurs</a>
-        </span><br>&#128104;&#8205;&#128187; Update by Benoit81</div>
-    </div>
-    
-   
+				</label>
+			</div>
+			<div class="toggle-container">
+				<span class="toggle-title">Fix Height Alone Points</span> <label
+					class="toggle"> <input type="checkbox"
+					id="togglefixHeightAlonePoints" checked> <span
+					class="slider"> </span>
+				</label>
+			</div>
+			<div class="toggle-container">
+				<span class="toggle-title">Cliffs</span> <label class="toggle">
+					<input type="checkbox" id="togglecliff"> <span
+					class="slider"> </span>
+				</label>
+			</div>
+			<div class="toggle-container">
+				<span class="toggle-title">Shrink coeff random</span>
+				<div class="range-container">
+					<input type="range" class="range-slider"
+						id="rangeShrinkCoeffRandom" min="0" max="100" value="42">
+					<div class="tooltip" id="tooltip">0.42</div>
+
+				</div>
+			</div>
+	
+	
+
+
+  	<div class="toggle-container" style="grid-column: span 2;"> 
+	  <span class="toggle-title">Custom Normalize value</span> 
+	  		<label class="toggle" >
+					<input type="checkbox" id="toggleCustomNormalize"> 
+					<span class="slider"> </span>
+			</label>
+		<div class="slider-container ">
+			<div class="slider-track"></div>
+			<div class="slider-range-before" id="slider-range-before"></div>
+			<div class="slider-range" id="slider-range"></div>
+			<div class="slider-range-after" id="slider-range-after"></div>
+			<div class="slider-thumb" id="slider-thumb-min"></div>
+			<div class="slider-thumb" id="slider-thumb-max"></div>
+			<div class="slider-value" id="slider-value-min">20</div>
+			<div class="slider-value" id="slider-value-max">80</div>
+		</div>
+ </div> 
+ 	</div>
+		<!--  	</form> -->
+ 
+	
+
+
+	<br>
+	<div id="example-table" style="border-radius: 8px;"></div>
+	<div id="context-menu" class="context-menu">
+		<ul>
+			<li data-action="apply">Apply</li>
+			<li data-action="delete">Delete</li>
+
+		</ul>
+	</div>
+	<div id="divseed"></div>
+	<span id="title-legend">Legend</span>
+	<div class="toggle-container">
+		<span class="toggle-title">Sort by value</span> <label class="toggle">
+			<input type="checkbox" id="toggleSort" checked> <span
+			class="slider"></span>
+		</label>
+	</div>
+	<div id="legend"></div>
+
+
+	<div id="creator">
+		&#128104;&#8205;&#128187; Create by <span class="yt"><a
+			href="https://www.youtube.com/channel/UCJtCTZHFRatUyy7K4raOGDA"
+			target="_blank">Bande de Codeurs</a> </span><br>&#128104;&#8205;&#128187;
+		Update by Benoit81
+	</div>
+	</div>
+
+
 </body>
 </html>

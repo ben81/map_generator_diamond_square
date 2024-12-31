@@ -2,7 +2,7 @@
 import Dexie from 'dexie';
 import { Random } from 'random'
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
-import { toggleCheckbox } from './main.js';
+import { p5k, updateDisplayNormalize, getMinValue, getMaxValue ,setMinValue,setMaxValue,updateSlider} from './main.js';
 
 
 const db = new Dexie('configurations');
@@ -28,7 +28,9 @@ export class Data {
 		this.rangeRandom = [-this.rangeRandomMaxValue, this.rangeRandomMaxValue];
 		this.rangeShrinkCoeffRandomValue = getRangeValue('rangeShrinkCoeffRandom');
 		this.rangeShrinkCoeff = this.rangeShrinkCoeffRandomValue / 100;
-
+		this.customNormalize = getToggleValue('toggleCustomNormalize');
+		this.minValue = getMinValue();
+		this.maxValue = getMaxValue();
 
 
 	};
@@ -80,7 +82,7 @@ export function setRangeValue(id, value) {
 
 
 db.version(1).stores({
-	configure: '++id,name,toggleRoundingValue,togglefixHeightAlonePointsValue,togglecliffValue,rangeRandomMaxValue,rangeShrinkCoeffRandomValue'
+	configure: '++id,name,toggleRoundingValue,togglefixHeightAlonePointsValue,togglecliffValue,rangeRandomMaxValue,rangeShrinkCoeffRandomValue,customNormalize,minValue,maxValue'
 });
 
 
@@ -110,7 +112,13 @@ function applyRow(rowData) {
 	setToggleValue('togglecliff', rowData.togglecliffValue);
 	setRangeValue('rangeRandomMax', rowData.rangeRandomMaxValue);
 	setRangeValue('rangeShrinkCoeffRandom', rowData.rangeShrinkCoeffRandomValue);
-	toggleCheckbox();
+	console.log("apply reloader configuration");
+	setToggleValue('toggleCustomNormalize', rowData.customNormalize);
+	setMinValue ( rowData.minValue);
+	setMaxValue (rowData.maxValue);
+	updateDisplayNormalize();
+	updateSlider();
+	p5k.redrawAllReload();
 }
 
 db.configure.toArray().then(function(data) {
@@ -133,6 +141,10 @@ db.configure.toArray().then(function(data) {
 			{ title: "fix Height Alone Points", field: "togglefixHeightAlonePointsValue", sorter: "boolean" },
 			{ title: "Cliff", field: "togglecliffValue", sorter: "boolean" },
 			{ title: "range Shrink Coeff Random", field: "rangeShrinkCoeffRandomValue", sorter: "number" },
+			{ title: "CustomNormalize", field: "customNormalize", sorter: "boolean" },
+			{ title: "low value", field: "minValue", sorter: "number" },
+			{ title: "high value", field: "maxValue", sorter: "number" },
+
 
 		],
 

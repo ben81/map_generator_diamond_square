@@ -75,9 +75,15 @@ const sketch = (p) => {
 		}
 	};
 	
+	
+	
+	p.redrawAllReload = function() {
+		drawAll(true);
+	};
+	
 	p.redrawAll = function() {
-		drawAll(false)
-	}
+		drawAll(false);
+	};
 
 
 	function drawAll(updateSeed) {
@@ -88,7 +94,7 @@ const sketch = (p) => {
 		 data= new Data(updateSeed,data!=null ? data.seedValue : 0);
 		 RANGE_RANDOM = data.rangeRandom;
 		 SHRINK_COEFF_RANDOM = data.rangeShrinkCoeff;
-		
+		console.log("draw with "+data);
 		rng = new Random(data.seedValue);
 
 		step = 1;
@@ -97,7 +103,7 @@ const sketch = (p) => {
 
 		initGrid();
 		calculateHeights(GRID_SIZE);
-		normalizeGrid();
+		normalizeGrid(data);
 		computeCliff();
 		fixHeightAlonePoints(FIX_HEIGHT_ALONE_POINT);
 		computeCliff();
@@ -316,23 +322,49 @@ const sketch = (p) => {
 	}
 
 
-	function normalizeGrid() {
+	function normalizeGrid(data) {
 
 		let min = Math.min();
 		let max = Math.max();
+		let l=[]
 		for (let x = 0; x < GRID_SIZE; x++) {
 			for (let y = 0; y < GRID_SIZE; y++) {
 				let current_height = grid[x][y].height;
 				min = Math.min(min, current_height);
 				max = Math.max(max, current_height);
+				l.push(current_height);
 			}
 		}
 		let ratio = (RANGE_HEIGHT[1] - RANGE_HEIGHT[0]) / (max - min);
-
+		l.sort((a, b) => a - b);
+		
+		let normalize;
+		if (!data.customNormalize) {
+			normalize = function(v) {
+				return Math.round((v - min) * ratio + RANGE_HEIGHT[0])
+			};
+		} else {
+			let size =l.length;
+			let v1= l[Math.round( data.minValue * size /100)];
+			let v2= l[Math.round( data.maxValue * size /100)];
+			let v1r=6;
+			let v2r=12;
+			let ratio0=(v1r-RANGE_HEIGHT[0])/(v1-min);
+			let ratio1=(v2r-v1r)/(v2-v1);
+			let ratio2=(RANGE_HEIGHT[1]-v2r)/(max-v2);
+			normalize = function(v) {
+				if (v < v1)
+					return Math.round((v - min) * ratio0 + RANGE_HEIGHT[0]);
+				if (v < v2)
+					return Math.round((v - v1) * ratio1 + v1r);
+				return Math.round((v - v2) * ratio2 + v2r);
+			};
+		}
+		
 		for (let x = 0; x < GRID_SIZE; x++) {
 			for (let y = 0; y < GRID_SIZE; y++) {
 				let current_height = grid[x][y].height;
-				let new_height = Math.round((current_height - min) * ratio + RANGE_HEIGHT[0]);
+				let new_height =normalize(current_height);
 				grid[x][y].height = new_height;
 			}
 		}
@@ -554,19 +586,9 @@ const sketch = (p) => {
 
 };
 
-let p5k=new p5(sketch);
+export const p5k=new p5(sketch);
 
 
-export function toggleCheckbox(){
-	p5k.redrawAll();
-}
-
-document.getElementById('rangeRandomMax').addEventListener('change', toggleCheckbox);
-document.getElementById('toggleRounding').addEventListener('change', toggleCheckbox);
-document.getElementById('togglefixHeightAlonePoints').addEventListener('change', toggleCheckbox);
-document.getElementById('togglecliff').addEventListener('change', toggleCheckbox);
-document.getElementById('rangeShrinkCoeffRandom').addEventListener('change', toggleCheckbox);
-document.getElementById('toggleSort').addEventListener('change', toggleCheckbox);
 
 
 
@@ -609,3 +631,112 @@ document.addEventListener('DOMContentLoaded', () => {
         tooltip.style.display = 'block';
     });
 });
+
+
+const sliderContainer = document.querySelector('.slider-container');
+const sliderRange = document.getElementById('slider-range');
+const sliderRangeBefore = document.getElementById('slider-range-before');
+const sliderRangeAfter = document.getElementById('slider-range-after');
+const sliderThumbMin = document.getElementById('slider-thumb-min');
+const sliderThumbMax = document.getElementById('slider-thumb-max');
+const sliderValueMin = document.getElementById('slider-value-min');
+const sliderValueMax = document.getElementById('slider-value-max');
+
+ let minValue = 20;
+ let maxValue = 80;
+
+export function setMinValue(v){
+	minValue=v;
+}
+
+export function setMaxValue(v){
+	maxValue=v;
+}
+
+export function getMinValue(){
+	return minValue;
+}
+
+export function getMaxValue(){
+	return maxValue;
+}
+
+export const updateSlider = () => {
+	const minPercent = (minValue / 100) * 100;
+	const maxPercent = (maxValue / 100) * 100;
+
+	sliderThumbMin.style.left = `${minPercent}%`;
+	sliderThumbMax.style.left = `${maxPercent}%`;
+	sliderRange.style.left = `${minPercent}%`;
+	sliderRange.style.width = `${maxPercent - minPercent}%`;
+	
+	sliderRangeBefore.style.left = `0%`;
+	sliderRangeBefore.style.width = `${minPercent}%`;
+	
+	sliderRangeAfter.style.left = `${maxPercent}%`;
+	sliderRangeAfter.style.width = `${100 - maxPercent}%`;
+	
+	sliderValueMin.style.left = `${minPercent}%`;
+	sliderValueMax.style.left = `${maxPercent}%`;
+	sliderValueMin.textContent = minValue;
+	sliderValueMax.textContent = maxValue;
+};
+
+const onPointerDown = (event, thumb) => {
+	const onPointerMove = (event) => {
+		const rect = sliderContainer.getBoundingClientRect();
+		const percent = ((event.clientX - rect.left) / rect.width) * 100;
+		const value = Math.round(percent);
+
+		if (thumb === 'min') {
+			if (value < maxValue) {
+				minValue = value;
+			}
+		} else {
+			if (value > minValue) {
+				maxValue = value;
+			}
+		}
+
+		updateSlider();
+		p5k.redrawAll();
+	};
+
+	const onPointerUp = () => {
+		document.removeEventListener('pointermove', onPointerMove);
+		document.removeEventListener('pointerup', onPointerUp);
+	};
+
+	document.addEventListener('pointermove', onPointerMove);
+	document.addEventListener('pointerup', onPointerUp);
+};
+
+sliderThumbMin.addEventListener('pointerdown', (event) => onPointerDown(event, 'min'));
+sliderThumbMax.addEventListener('pointerdown', (event) => onPointerDown(event, 'max'));
+
+updateSlider();
+
+export function updateDisplayNormalize() {
+	if (document.getElementById('toggleCustomNormalize').checked) {
+		sliderContainer.style.display = null;
+	} else {
+		sliderContainer.style.display = 'none';
+	}
+}
+
+
+
+export function toggleCheckbox(){	
+	updateDisplayNormalize();	
+	p5k.redrawAll();
+}
+
+document.getElementById('rangeRandomMax').addEventListener('change', toggleCheckbox);
+document.getElementById('toggleRounding').addEventListener('change', toggleCheckbox);
+document.getElementById('togglefixHeightAlonePoints').addEventListener('change', toggleCheckbox);
+document.getElementById('togglecliff').addEventListener('change', toggleCheckbox);
+document.getElementById('rangeShrinkCoeffRandom').addEventListener('change', toggleCheckbox);
+document.getElementById('toggleSort').addEventListener('change', toggleCheckbox);
+document.getElementById('toggleCustomNormalize').addEventListener('change', toggleCheckbox);
+
+updateDisplayNormalize();

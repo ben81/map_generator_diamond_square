@@ -132,6 +132,58 @@ body {
 	width: 100%;
 }
 
+.slider-container {
+	position: relative;
+	width: 300px;
+	margin: 50px auto;
+}
+
+.slider-track {
+	position: absolute;
+	width: 100%;
+	height: 5px;
+	background-color: #ddd;
+	border-radius: 2.5px;
+}
+
+.slider-range-before {
+	position: absolute;
+	height: 5px;
+	background-color: #02c;
+	border-radius: 2.5px;
+}
+
+.slider-range {
+	position: absolute;
+	height: 5px;
+	background-color: #4caf50;
+	border-radius: 2.5px;
+}
+
+.slider-range-after {
+	position: absolute;
+	height: 5px;
+	background-color: #9a9b9af2;
+	border-radius: 2.5px;
+}
+
+.slider-thumb {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background-color: #4caf50;
+	border-radius: 50%;
+	cursor: pointer;
+	transform: translate(-50%, -50%);
+}
+
+.slider-value {
+	position: absolute;
+	top: -30px;
+	font-size: 14px;
+	color: #333;
+}
+
 .tooltip {
 	position: absolute;
 	top: -30px;
